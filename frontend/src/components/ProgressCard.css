@@ -1,0 +1,158 @@
+.progress-card {
+  background: linear-gradient(135deg, #FFFFFF 0%, #FAFCFA 100%);
+  margin-bottom: 28px;
+  position: relative;
+  overflow: hidden;
+}
+
+.progress-card::after {
+  content: "";
+  position: absolute;
+  top: -50px;
+  right: -50px;
+  width: 140px;
+  height: 140px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(15, 157, 138, 0.08) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+.progress-content {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 28px;
+}
+
+.progress-left {
+  flex: 1;
+}
+
+.progress-header-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 8px;
+}
+
+.progress-title {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--text-main);
+}
+
+.progress-fraction {
+  font-size: 0.95rem;
+  color: var(--text-muted);
+}
+
+.progress-fraction strong {
+  color: var(--primary-teal);
+  font-weight: 700;
+}
+
+.encouragement-text {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.92rem;
+  color: var(--text-muted);
+  margin-bottom: 16px;
+}
+
+.encouragement-icon {
+  color: var(--primary-teal);
+  flex-shrink: 0;
+}
+
+.progress-bar-track {
+  width: 100%;
+  height: 10px;
+  background-color: var(--secondary-sage);
+  border-radius: var(--radius-full);
+  overflow: hidden;
+  margin-bottom: 16px;
+}
+
+.progress-bar-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #0F9D8A 0%, #15bca6 100%);
+  border-radius: var(--radius-full);
+  transition: width 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.progress-footer-stats {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.stat-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background-color: #F0F5F1;
+  padding: 4px 12px;
+  border-radius: var(--radius-full);
+  font-size: 0.82rem;
+  font-weight: 500;
+  color: var(--text-main);
+}
+
+.stat-icon {
+  color: var(--primary-teal);
+}
+
+/* Circle Progress Indicator */
+.progress-circle-wrap {
+  position: relative;
+  width: 96px;
+  height: 96px;
+  flex-shrink: 0;
+}
+
+.progress-circle-svg {
+  width: 100%;
+  height: 100%;
+  transform: rotate(-90deg);
+}
+
+.circle-bg {
+  fill: none;
+  stroke: var(--secondary-sage);
+}
+
+.circle-fill {
+  fill: none;
+  stroke: var(--primary-teal);
+  stroke-linecap: round;
+  transition: stroke-dashoffset 0.5s ease-out;
+}
+
+.circle-inner-text {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.circle-percent {
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: var(--text-main);
+}
+
+.circle-sub {
+  font-size: 0.68rem;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+@media (max-width: 600px) {
+  .progress-circle-wrap {
+    display: none;
+  }
+}

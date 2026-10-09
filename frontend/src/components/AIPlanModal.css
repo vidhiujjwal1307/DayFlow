@@ -1,0 +1,139 @@
+.ai-modal-card {
+  max-width: 600px;
+}
+
+.ai-modal-title-wrap {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.ai-sparkle-icon {
+  color: #d99b00;
+}
+
+.ai-intro-text {
+  font-size: 0.92rem;
+  color: var(--text-muted);
+  line-height: 1.5;
+  margin-bottom: 8px;
+}
+
+.ai-summary-card {
+  background: var(--highlight-yellow);
+  border: 1px solid rgba(220, 180, 50, 0.3);
+  padding: 14px 18px;
+  border-radius: var(--radius-md);
+  margin-bottom: 18px;
+}
+
+.ai-summary-text {
+  font-size: 0.92rem;
+  color: var(--highlight-yellow-text);
+  font-style: italic;
+  line-height: 1.5;
+}
+
+.review-subheading {
+  font-size: 0.92rem;
+  font-weight: 600;
+  color: var(--text-main);
+  margin-bottom: 12px;
+}
+
+.ai-tasks-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  max-height: 340px;
+  overflow-y: auto;
+  margin-bottom: 20px;
+  padding-right: 4px;
+}
+
+.ai-task-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  background: #FAFCFA;
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-sm);
+  padding: 12px 14px;
+  cursor: pointer;
+  transition: var(--transition-smooth);
+}
+
+.ai-task-item:hover {
+  background: #F2F7F4;
+}
+
+.ai-task-item.selected {
+  border-color: var(--primary-teal);
+  background: var(--primary-teal-light);
+}
+
+.ai-task-check {
+  width: 18px;
+  height: 18px;
+  border: 2px solid #a3b8ad;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 2px;
+  flex-shrink: 0;
+}
+
+.ai-task-check.checked {
+  background: var(--primary-teal);
+  border-color: var(--primary-teal);
+  color: #fff;
+}
+
+.ai-task-info {
+  flex: 1;
+}
+
+.ai-task-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 4px;
+}
+
+.ai-task-title {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--text-main);
+}
+
+.ai-task-time {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.ai-task-meta {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 0.8rem;
+}
+
+.ai-task-desc {
+  color: var(--text-muted);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 280px;
+}
+
+.spinner {
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  100% { transform: rotate(360deg); }
+}

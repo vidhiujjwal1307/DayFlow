@@ -1,0 +1,47 @@
+.empty-state-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 60px 24px;
+  background-color: #FFFFFF;
+}
+
+.empty-state-art {
+  margin-bottom: 20px;
+}
+
+.art-circle {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  background-color: var(--secondary-sage);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 16px rgba(15, 157, 138, 0.12);
+}
+
+.art-icon {
+  color: var(--primary-teal);
+}
+
+.empty-state-title {
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: var(--text-main);
+  margin-bottom: 8px;
+}
+
+.empty-state-subtitle {
+  font-size: 0.95rem;
+  color: var(--text-muted);
+  max-width: 400px;
+  margin-bottom: 24px;
+  line-height: 1.5;
+}
+
+.empty-state-btn {
+  padding: 12px 24px;
+}

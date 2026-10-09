@@ -1,0 +1,110 @@
+.header-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 32px;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+
+.header-titles {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.header-greeting {
+  font-size: 1.85rem;
+  font-weight: 700;
+  color: var(--text-main);
+  letter-spacing: -0.02em;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.greeting-emoji {
+  font-size: 1.6rem;
+}
+
+.header-subtitle {
+  color: var(--text-muted);
+  font-size: 1rem;
+}
+
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.date-picker-wrap {
+  display: flex;
+  align-items: center;
+  background: #FFFFFF;
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-full);
+  padding: 4px 6px;
+  box-shadow: var(--shadow-subtle);
+}
+
+.date-display-label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 12px;
+  cursor: pointer;
+  position: relative;
+  user-select: none;
+}
+
+.hidden-date-input {
+  position: absolute;
+  opacity: 0;
+  width: 100%;
+  height: 100%;
+  left: 0;
+  top: 0;
+  cursor: pointer;
+}
+
+.date-cal-icon {
+  color: var(--primary-teal);
+}
+
+.date-text {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--text-main);
+}
+
+.date-step-btn {
+  width: 28px;
+  height: 28px;
+}
+
+.ai-plan-btn {
+  background-color: var(--highlight-yellow);
+  color: var(--highlight-yellow-text);
+  border: 1px solid rgba(220, 180, 50, 0.2);
+}
+
+.ai-plan-btn:hover {
+  background-color: #faecc0;
+}
+
+.ai-btn-icon {
+  color: #c98200;
+}
+
+@media (max-width: 768px) {
+  .header-container {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .header-actions {
+    width: 100%;
+    justify-content: space-between;
+  }
+}

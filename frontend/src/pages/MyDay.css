@@ -1,0 +1,79 @@
+.myday-page {
+  display: flex;
+  flex-direction: column;
+}
+
+.schedule-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.schedule-titles {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+}
+
+.schedule-title {
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: var(--text-main);
+}
+
+.schedule-count {
+  font-size: 0.9rem;
+  color: var(--text-muted);
+}
+
+.view-switch-group {
+  display: flex;
+  background-color: #EEF3EF;
+  border-radius: var(--radius-full);
+  padding: 3px;
+}
+
+.view-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 14px;
+  border-radius: var(--radius-full);
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: var(--text-muted);
+  transition: var(--transition-smooth);
+}
+
+.view-btn.active {
+  background-color: #FFFFFF;
+  color: var(--primary-teal);
+  font-weight: 600;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+}
+
+.loading-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  padding: 60px;
+  color: var(--text-muted);
+}
+
+.spinner-teal {
+  width: 32px;
+  height: 32px;
+  border: 3px solid var(--secondary-sage);
+  border-top-color: var(--primary-teal);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+.tasks-list-view {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}

@@ -1,0 +1,140 @@
+.reflection-page {
+  display: flex;
+  flex-direction: column;
+}
+
+.reflection-card {
+  max-width: 800px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+.reflection-form {
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+}
+
+.mood-selector-wrap label {
+  font-size: 0.92rem;
+  font-weight: 600;
+  color: var(--text-main);
+  margin-bottom: 8px;
+}
+
+.mood-options {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.mood-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background-color: #FAFCFA;
+  border: 1px solid var(--border-subtle);
+  padding: 8px 16px;
+  border-radius: var(--radius-full);
+  font-size: 0.88rem;
+  font-weight: 500;
+  color: var(--text-main);
+  transition: var(--transition-smooth);
+}
+
+.mood-btn:hover {
+  background-color: #EEF3EF;
+}
+
+.mood-btn.active {
+  background-color: var(--primary-teal-light);
+  border-color: var(--primary-teal);
+  color: var(--primary-teal);
+  font-weight: 600;
+}
+
+.mood-emoji {
+  font-size: 1.1rem;
+}
+
+.prompt-icon {
+  margin-right: 6px;
+  vertical-align: text-bottom;
+}
+
+.prompt-icon.teal { color: var(--primary-teal); }
+.prompt-icon.amber { color: #f39c12; }
+.prompt-icon.blue { color: #3498db; }
+.prompt-icon.rose { color: #e74c3c; }
+
+.save-ref-btn {
+  padding: 12px 28px;
+  font-size: 1rem;
+}
+
+.history-section {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.history-title {
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: var(--text-main);
+}
+
+.empty-history-text {
+  color: var(--text-muted);
+  font-size: 0.95rem;
+  font-style: italic;
+  padding: 20px 0;
+}
+
+.history-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 16px;
+}
+
+.history-entry-card {
+  background: #FAFCFA;
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  padding: 16px;
+  cursor: pointer;
+  transition: var(--transition-smooth);
+}
+
+.history-entry-card:hover {
+  border-color: var(--primary-teal);
+  box-shadow: 0 4px 12px rgba(15, 157, 138, 0.08);
+}
+
+.history-entry-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 8px;
+}
+
+.history-entry-date {
+  font-weight: 700;
+  font-size: 0.92rem;
+  color: var(--primary-teal);
+}
+
+.history-entry-mood {
+  font-size: 0.8rem;
+  background: #FFFFFF;
+  padding: 2px 8px;
+  border-radius: var(--radius-full);
+  border: 1px solid var(--border-subtle);
+}
+
+.history-entry-snippet {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  line-height: 1.4;
+  margin-bottom: 4px;
+}
