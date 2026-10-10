@@ -10,9 +10,10 @@ export default function AIPlanModal({
   onImportTasks,
 }) {
   const [tasksInput, setTasksInput] = useState('');
-  const [availableHours, setAvailableHours] = useState('09:00 - 18:00');
+  const [availableStart, setAvailableStart] = useState('09:00');
+  const [availableEnd, setAvailableEnd] = useState('18:00');
   const [fixedCommitments, setFixedCommitments] = useState('Lunch & break 13:00 - 14:00');
-  const [priorities, setPriorities] = useState('Deep work and focus in morning');
+  const [priorities, setPriorities] = useState('Balance focused work with short breaks');
   
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
@@ -33,12 +34,16 @@ export default function AIPlanModal({
       setError('Please list at least 1 or 2 tasks you would like to accomplish.');
       return;
     }
+    if (!availableStart || !availableEnd || availableStart >= availableEnd) {
+      setError('Choose an end time later than your start time.');
+      return;
+    }
 
     try {
       setLoading(true);
       const res = await AIAPI.planDay({
         date: targetDate,
-        available_hours: availableHours,
+        available_hours: `${availableStart} - ${availableEnd}`,
         important_tasks: rawTasks,
         priorities: priorities,
         fixed_commitments: fixedCommitments,
@@ -48,7 +53,7 @@ export default function AIPlanModal({
       // Pre-select all suggested tasks
       setSelectedTasks(res.suggested_tasks.map((_, idx) => idx));
     } catch (err) {
-      setError('Failed to generate schedule. Please try again.');
+      setError(err.response?.data?.detail || 'Failed to generate schedule. Please try again.');
     } finally {
       setLoading(false);
     }
@@ -115,33 +120,42 @@ export default function AIPlanModal({
               />
             </div>
 
-            <div className="form-row">
+            <div className="ai-time-range">
               <div className="form-group">
-                <label>Available Hours</label>
+                <label>Available From</label>
                 <input
-                  type="text"
-                  placeholder="09:00 - 18:00"
-                  value={availableHours}
-                  onChange={(e) => setAvailableHours(e.target.value)}
+                  type="time"
+                  value={availableStart}
+                  onChange={(e) => setAvailableStart(e.target.value)}
                 />
               </div>
 
               <div className="form-group">
-                <label>Fixed Commitments / Breaks</label>
+                <label>Available Until</label>
                 <input
-                  type="text"
-                  placeholder="Lunch 13:00 - 14:00"
-                  value={fixedCommitments}
-                  onChange={(e) => setFixedCommitments(e.target.value)}
+                  type="time"
+                  value={availableEnd}
+                  onChange={(e) => setAvailableEnd(e.target.value)}
                 />
               </div>
+
+            </div>
+
+            <div className="form-group">
+              <label>Fixed Commitments / Breaks</label>
+              <input
+                type="text"
+                placeholder="Lunch 13:00 - 14:00"
+                value={fixedCommitments}
+                onChange={(e) => setFixedCommitments(e.target.value)}
+              />
             </div>
 
             <div className="form-group">
               <label>Pacing & Priorities</label>
               <input
                 type="text"
-                placeholder="High focus in morning, gentle wrap-up in afternoon"
+                placeholder="Deep work first, then lighter tasks"
                 value={priorities}
                 onChange={(e) => setPriorities(e.target.value)}
               />
