@@ -7,11 +7,12 @@ import {
   BarChart2, 
   BookOpen, 
   Settings as SettingsIcon,
-  Sparkles
+  Sparkles,
+  LogOut
 } from 'lucide-react';
 import './Sidebar.css';
 
-export default function Sidebar() {
+export default function Sidebar({ user, onLogout }) {
   const navItems = [
     { to: '/', label: 'My Day', icon: Sun },
     { to: '/notes', label: 'Notes', icon: StickyNote },
@@ -55,6 +56,16 @@ export default function Sidebar() {
 
       {/* Motivational Footer Note */}
       <div className="sidebar-footer">
+        <div className="sidebar-account">
+          <div className="account-avatar">{(user?.name || user?.email || 'U').charAt(0).toUpperCase()}</div>
+          <div className="account-details">
+            <strong>{user?.name || 'Your account'}</strong>
+            <span>{user?.email}</span>
+          </div>
+          <button className="account-logout" onClick={onLogout} title="Sign out" aria-label="Sign out">
+            <LogOut size={17} />
+          </button>
+        </div>
         <div className="motivational-card">
           <Sparkles size={16} className="quote-icon" />
           <p className="quote-text">“Small steps make beautiful progress.”</p>

@@ -99,6 +99,32 @@
   padding-top: 20px;
 }
 
+.sidebar-account {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 0 4px 16px;
+}
+
+.account-avatar {
+  width: 34px;
+  height: 34px;
+  flex: 0 0 34px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  color: var(--primary-teal);
+  background: var(--primary-teal-light);
+  font-weight: 700;
+}
+
+.account-details { min-width: 0; flex: 1; }
+.account-details strong, .account-details span { display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.account-details strong { font-size: 0.82rem; }
+.account-details span { color: var(--text-muted); font-size: 0.7rem; }
+.account-logout { color: var(--text-muted); padding: 7px; border-radius: 8px; }
+.account-logout:hover { color: var(--danger); background: var(--danger-light); }
+
 .motivational-card {
   background-color: #FAFCFA;
   border: 1px dashed var(--border-subtle);
@@ -152,6 +178,12 @@
   }
 
   .sidebar-footer {
-    display: none;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    padding-top: 8px;
   }
+
+  .sidebar-account { padding: 0; }
+  .motivational-card { display: none; }
 }

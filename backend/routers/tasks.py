@@ -4,13 +4,14 @@ from typing import List, Optional
 from datetime import datetime
 
 from ..database import get_db
-from ..models import Task
+from ..models import Task, User
 from ..schemas import TaskCreate, TaskUpdate, TaskResponse, DaySummaryResponse
 from ..services.task_service import (
     calculate_duration,
     check_task_overlaps,
     generate_recurring_instances
 )
+from ..auth import get_current_user
 
 router = APIRouter(prefix="/api/tasks", tags=["Tasks"])
 
@@ -20,9 +21,12 @@ def get_all_tasks(
     priority: Optional[str] = None,
     completed: Optional[bool] = None,
     search: Optional[str] = None,
+    current_user: User = Depends(get_current_user),
     db: Session = Depends(get_db)
 ):
     query = db.query(Task)
+    query = query.filter(Task.user_id == current_user.id)
+
     if category and category != "All":
         query = query.filter(Task.category == category)
     if priority and priority != "All":
@@ -32,19 +36,27 @@ def get_all_tasks(
     if search:
         query = query.filter(Task.title.ilike(f"%{search}%"))
 
-    # Order by date asc, start_time asc
     tasks = query.order_by(Task.date.asc(), Task.start_time.asc().nulls_last()).all()
     return tasks
 
 @router.get("/day/{date}", response_model=DaySummaryResponse)
-def get_day_tasks(date: str, db: Session = Depends(get_db)):
-    # First sync recurring instances for this day if needed
+def get_day_tasks(
+    date: str,
+    current_user: User = Depends(get_current_user),
+    db: Session = Depends(get_db)
+):
+    user_id = current_user.id
+
+    # Sync recurring instances for this day if needed
     try:
-        generate_recurring_instances(db, date)
+        generate_recurring_instances(db, date, user_id=user_id)
     except Exception:
         pass
 
-    tasks = db.query(Task).filter(Task.date == date).order_by(
+    query = db.query(Task).filter(Task.date == date)
+    query = query.filter(Task.user_id == current_user.id)
+
+    tasks = query.order_by(
         Task.start_time.asc().nulls_last(),
         Task.created_at.asc()
     ).all()
@@ -75,55 +87,71 @@ def get_upcoming_tasks(
     from_date: Optional[str] = None,
     category: Optional[str] = None,
     priority: Optional[str] = None,
+    current_user: User = Depends(get_current_user),
     db: Session = Depends(get_db)
 ):
     if not from_date:
         from_date = datetime.now().strftime("%Y-%m-%d")
 
-    query = db.query(Task).filter(Task.date >= from_date)
+    query = db.query(Task).filter(Task.date >= from_date, Task.user_id == current_user.id)
     if category and category != "All":
         query = query.filter(Task.category == category)
     if priority and priority != "All":
         query = query.filter(Task.priority == priority)
-
-    tasks = query.order_by(Task.date.asc(), Task.start_time.asc().nulls_last()).all()
-    return tasks
+    return query.order_by(Task.date.asc(), Task.start_time.asc().nulls_last()).all()
 
 @router.post("", response_model=TaskResponse, status_code=201)
-def create_task(task_in: TaskCreate, db: Session = Depends(get_db)):
-    # Validate start/end time logic
+def create_task(
+    task_in: TaskCreate,
+    current_user: User = Depends(get_current_user),
+    db: Session = Depends(get_db)
+):
     if task_in.start_time and task_in.end_time:
         if task_in.end_time <= task_in.start_time:
             raise HTTPException(
                 status_code=400,
                 detail="End time must be later than start time for same-day scheduled tasks."
             )
-        # Auto-compute duration if not manually provided
         if not task_in.estimated_duration:
             task_in.estimated_duration = calculate_duration(task_in.start_time, task_in.end_time)
 
-    db_task = Task(**task_in.model_dump())
+    task_data = task_in.model_dump()
+    task_data["user_id"] = current_user.id
+
+    db_task = Task(**task_data)
     db.add(db_task)
     db.commit()
     db.refresh(db_task)
     return db_task
 
 @router.get("/{task_id}", response_model=TaskResponse)
-def get_task(task_id: int, db: Session = Depends(get_db)):
-    task = db.query(Task).filter(Task.id == task_id).first()
+def get_task(
+    task_id: int,
+    current_user: User = Depends(get_current_user),
+    db: Session = Depends(get_db)
+):
+    query = db.query(Task).filter(Task.id == task_id)
+    query = query.filter(Task.user_id == current_user.id)
+    task = query.first()
     if not task:
         raise HTTPException(status_code=404, detail="Task not found")
     return task
 
 @router.put("/{task_id}", response_model=TaskResponse)
-def update_task(task_id: int, task_in: TaskUpdate, db: Session = Depends(get_db)):
-    task = db.query(Task).filter(Task.id == task_id).first()
+def update_task(
+    task_id: int,
+    task_in: TaskUpdate,
+    current_user: User = Depends(get_current_user),
+    db: Session = Depends(get_db)
+):
+    query = db.query(Task).filter(Task.id == task_id)
+    query = query.filter(Task.user_id == current_user.id)
+    task = query.first()
     if not task:
         raise HTTPException(status_code=404, detail="Task not found")
 
     update_data = task_in.model_dump(exclude_unset=True)
 
-    # Check times validity if updated
     start = update_data.get("start_time", task.start_time)
     end = update_data.get("end_time", task.end_time)
     if start and end:
@@ -143,8 +171,14 @@ def update_task(task_id: int, task_in: TaskUpdate, db: Session = Depends(get_db)
     return task
 
 @router.patch("/{task_id}/toggle", response_model=TaskResponse)
-def toggle_task_completion(task_id: int, db: Session = Depends(get_db)):
-    task = db.query(Task).filter(Task.id == task_id).first()
+def toggle_task_completion(
+    task_id: int,
+    current_user: User = Depends(get_current_user),
+    db: Session = Depends(get_db)
+):
+    query = db.query(Task).filter(Task.id == task_id)
+    query = query.filter(Task.user_id == current_user.id)
+    task = query.first()
     if not task:
         raise HTTPException(status_code=404, detail="Task not found")
 
@@ -154,8 +188,14 @@ def toggle_task_completion(task_id: int, db: Session = Depends(get_db)):
     return task
 
 @router.delete("/{task_id}", status_code=204)
-def delete_task(task_id: int, db: Session = Depends(get_db)):
-    task = db.query(Task).filter(Task.id == task_id).first()
+def delete_task(
+    task_id: int,
+    current_user: User = Depends(get_current_user),
+    db: Session = Depends(get_db)
+):
+    query = db.query(Task).filter(Task.id == task_id)
+    query = query.filter(Task.user_id == current_user.id)
+    task = query.first()
     if not task:
         raise HTTPException(status_code=404, detail="Task not found")
 
@@ -164,8 +204,15 @@ def delete_task(task_id: int, db: Session = Depends(get_db)):
     return None
 
 @router.post("/{task_id}/reschedule", response_model=TaskResponse)
-def reschedule_task(task_id: int, new_date: str, db: Session = Depends(get_db)):
-    task = db.query(Task).filter(Task.id == task_id).first()
+def reschedule_task(
+    task_id: int,
+    new_date: str,
+    current_user: User = Depends(get_current_user),
+    db: Session = Depends(get_db)
+):
+    query = db.query(Task).filter(Task.id == task_id)
+    query = query.filter(Task.user_id == current_user.id)
+    task = query.first()
     if not task:
         raise HTTPException(status_code=404, detail="Task not found")
 

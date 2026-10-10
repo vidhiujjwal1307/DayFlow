@@ -9,6 +9,17 @@ const api = axios.create({
   },
 });
 
+api.interceptors.request.use((config) => {
+  const token = localStorage.getItem('dayflow_access_token');
+  if (token) config.headers.Authorization = `Bearer ${token}`;
+  return config;
+});
+
+export const AuthAPI = {
+  login: (data) => api.post('/api/auth/login', data).then((res) => res.data),
+  register: (data) => api.post('/api/auth/register', data).then((res) => res.data),
+};
+
 export const TaskAPI = {
   getAll: (params) => api.get('/api/tasks', { params }).then((res) => res.data),
   getDaySummary: (date) => api.get(`/api/tasks/day/${date}`).then((res) => res.data),

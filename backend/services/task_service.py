@@ -59,22 +59,25 @@ def check_task_overlaps(tasks: List[Task]) -> List[ConflictWarning]:
                 ))
     return warnings
 
-def generate_recurring_instances(db: Session, target_date_str: str):
+def generate_recurring_instances(db: Session, target_date_str: str, user_id: Optional[int] = None):
     """
     Check recurring tasks and create instances for target_date if not already present.
     Rules:
     - Daily: every day
     - Weekdays: Monday to Friday (weekday 0-4)
-    Avoids duplicate creations by checking (title, date, recurrence).
+    Avoids duplicate creations by checking (title, date, recurrence, user_id).
     """
     target_date = datetime.strptime(target_date_str, "%Y-%m-%d").date()
     target_weekday = target_date.weekday() # 0 is Monday, 6 is Sunday
 
     # Find templates / recurring definitions created on or before target_date
-    recurring_templates = db.query(Task).filter(
+    q = db.query(Task).filter(
         Task.recurrence.in_(["Daily", "Weekdays"]),
         Task.date <= target_date_str
-    ).all()
+    )
+    if user_id is not None:
+        q = q.filter(Task.user_id == user_id)
+    recurring_templates = q.all()
 
     for item in recurring_templates:
         if item.date == target_date_str:
@@ -88,14 +91,18 @@ def generate_recurring_instances(db: Session, target_date_str: str):
 
         if should_create:
             # Check if already exists on target_date with same title and recurrence
-            exists = db.query(Task).filter(
+            exist_q = db.query(Task).filter(
                 Task.date == target_date_str,
                 Task.title == item.title,
                 Task.recurrence == item.recurrence
-            ).first()
+            )
+            if user_id is not None:
+                exist_q = exist_q.filter(Task.user_id == user_id)
+            exists = exist_q.first()
 
             if not exists:
                 new_task = Task(
+                    user_id=item.user_id,
                     title=item.title,
                     description=item.description,
                     date=target_date_str,
@@ -109,3 +116,4 @@ def generate_recurring_instances(db: Session, target_date_str: str):
                 )
                 db.add(new_task)
     db.commit()
+

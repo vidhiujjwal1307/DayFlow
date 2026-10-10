@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from .database import engine, Base
-from .routers import tasks, reflections, analytics, settings, ai, notes
+from .routers import tasks, reflections, analytics, settings, ai, notes, auth
 
 # Create DB tables
 Base.metadata.create_all(bind=engine)
@@ -22,6 +22,7 @@ app.add_middleware(
 )
 
 # Include routers
+app.include_router(auth.router)
 app.include_router(tasks.router)
 app.include_router(notes.router)
 app.include_router(reflections.router)

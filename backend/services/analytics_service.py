@@ -1,10 +1,9 @@
-from datetime import datetime, timedelta
-from typing import List, Dict
+from typing import List, Dict, Optional
 from sqlalchemy.orm import Session
 from ..models import Task
 from ..schemas import WeeklyAnalyticsResponse, DayAnalytics, CategoryBreakdown
 
-def calculate_weekly_analytics(db: Session, reference_date_str: str) -> WeeklyAnalyticsResponse:
+def calculate_weekly_analytics(db: Session, reference_date_str: str, user_id: Optional[int] = None) -> WeeklyAnalyticsResponse:
     """Calculate weekly productivity metrics for the 7-day period around reference_date."""
     ref_date = datetime.strptime(reference_date_str, "%Y-%m-%d").date()
     # Calculate start of week (Monday)
@@ -15,10 +14,13 @@ def calculate_weekly_analytics(db: Session, reference_date_str: str) -> WeeklyAn
     end_str = end_of_week.strftime("%Y-%m-%d")
 
     # Fetch tasks for the entire week
-    week_tasks = db.query(Task).filter(
+    q = db.query(Task).filter(
         Task.date >= start_str,
         Task.date <= end_str
-    ).all()
+    )
+    if user_id is not None:
+        q = q.filter(Task.user_id == user_id)
+    week_tasks = q.all()
 
     daily_stats: List[DayAnalytics] = []
     category_counts: Dict[str, Dict[str, int]] = {}
