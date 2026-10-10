@@ -1,6 +1,9 @@
 import axios from 'axios';
 
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000';
+// Production frontend and API are deployed separately on Vercel and Render.
+// Local development uses Vite's /api proxy to the FastAPI server.
+const API_BASE_URL = import.meta.env.VITE_API_URL
+  || (import.meta.env.PROD ? 'https://dayflow-2ntc.onrender.com' : '');
 
 const api = axios.create({
   baseURL: API_BASE_URL,
