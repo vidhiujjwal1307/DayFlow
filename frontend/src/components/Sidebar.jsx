@@ -1,24 +1,30 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
 import { 
-  Sun, 
-  StickyNote, 
-  CheckSquare, 
-  BarChart2, 
+  LayoutDashboard,
+  CalendarDays,
+  NotebookTabs,
+  CheckSquare,
+  BarChart2,
   BookOpen, 
   Settings as SettingsIcon,
   Sparkles,
-  LogOut
+  LogOut,
+  Library,
+  FolderKanban
 } from 'lucide-react';
 import './Sidebar.css';
 
 export default function Sidebar({ user, onLogout }) {
   const navItems = [
-    { to: '/', label: 'My Day', icon: Sun },
-    { to: '/notes', label: 'Notes', icon: StickyNote },
-    { to: '/all-tasks', label: 'All Tasks', icon: CheckSquare },
-    { to: '/weekly', label: 'Weekly Overview', icon: BarChart2 },
-    { to: '/reflections', label: 'Daily Reflection', icon: BookOpen },
+    { to: '/', label: 'Dashboard', icon: LayoutDashboard },
+    { to: '/all-tasks', label: 'Study Plan', icon: CalendarDays },
+    { to: '/weekly', label: 'Subjects', icon: Library },
+    { to: '/all-tasks', label: 'Tasks', icon: CheckSquare },
+    { to: '/weekly', label: 'Calendar', icon: CalendarDays },
+    { to: '/notes', label: 'Notes', icon: NotebookTabs },
+    { to: '/notes', label: 'Resources', icon: FolderKanban },
+    { to: '/weekly', label: 'Analytics', icon: BarChart2 },
     { to: '/settings', label: 'Settings', icon: SettingsIcon },
   ];
 
@@ -27,12 +33,10 @@ export default function Sidebar({ user, onLogout }) {
       {/* App Branding */}
       <div className="sidebar-brand">
         <div className="brand-logo">
-          <Sun className="brand-icon" size={24} />
-          <div className="brand-glow" />
+          <CalendarDays className="brand-icon" size={23} />
         </div>
         <div className="brand-text">
-          <span className="brand-name">DayFlow</span>
-          <span className="brand-tagline">Make Today Count</span>
+          <span className="brand-name">Scheduly</span>
         </div>
       </div>
 

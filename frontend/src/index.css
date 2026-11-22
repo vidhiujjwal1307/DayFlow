@@ -1,19 +1,19 @@
 /* DayFlow Theme & Design System */
 :root {
-  --bg-main: #F8FAF7;
-  --primary-teal: #0F9D8A;
-  --primary-teal-hover: #0c8272;
-  --primary-teal-light: #e5f6f3;
-  --primary-teal-subtle: rgba(15, 157, 138, 0.12);
-  --secondary-sage: #DDEDE3;
+  --bg-main: #F7F8FC;
+  --primary-teal: #7459AD;
+  --primary-teal-hover: #62469a;
+  --primary-teal-light: #eee9f7;
+  --primary-teal-subtle: rgba(116, 89, 173, 0.12);
+  --secondary-sage: #E9E7F2;
   --secondary-sage-dark: #b8d6c3;
   --card-bg: #FFFFFF;
-  --text-main: #25332F;
-  --text-muted: #7B8982;
+  --text-main: #202532;
+  --text-muted: #7C8494;
   --text-subtle: #9faea6;
   --highlight-yellow: #FFF3CD;
   --highlight-yellow-text: #856404;
-  --border-subtle: #E7EDE8;
+  --border-subtle: #E9EBF1;
   --border-focus: #0F9D8A;
   --danger: #d9534f;
   --danger-light: #fdf2f2;
@@ -108,8 +108,8 @@ input:focus, select:focus, textarea:focus {
 
 .main-content {
   flex: 1;
-  padding: 32px 40px 60px;
-  max-width: 1200px;
+  padding: 28px 34px 60px;
+  max-width: 1280px;
   margin: 0 auto;
   min-height: 100vh;
 }

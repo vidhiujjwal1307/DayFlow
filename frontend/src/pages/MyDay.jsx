@@ -6,7 +6,16 @@ import {
   Clock, 
   Filter, 
   CheckCircle,
-  Plus
+  Plus,
+  ChevronLeft,
+  ChevronRight,
+  Flame,
+  BarChart3,
+  Sparkles,
+  BookOpen,
+  SquarePen,
+  Bell,
+  CalendarPlus
 } from 'lucide-react';
 import Header from '../components/Header';
 import ProgressCard from '../components/ProgressCard';
@@ -181,6 +190,30 @@ export default function MyDay({ onToast, userName = '', setUserName }) {
     setIsTaskModalOpen(true);
   };
 
+  const monthFormatter = new Intl.DateTimeFormat('en-US', { month: 'long', year: 'numeric' });
+  const calendarDate = new Date(`${selectedDate}T12:00:00`);
+  const monthLabel = monthFormatter.format(calendarDate);
+  const daysInMonth = new Date(calendarDate.getFullYear(), calendarDate.getMonth() + 1, 0).getDate();
+  const firstWeekday = new Date(calendarDate.getFullYear(), calendarDate.getMonth(), 1).getDay();
+  const calendarCells = [
+    ...Array(firstWeekday).fill(null),
+    ...Array.from({ length: daysInMonth }, (_, i) => i + 1),
+  ];
+  const subjectProgress = [
+    { name: 'NLP', value: 72, color: '#9b79d1' },
+    { name: 'DBMS', value: 65, color: '#b68dde' },
+    { name: 'DSA', value: 80, color: '#a887d5' },
+    { name: 'Agile', value: 55, color: '#7cc5b5' },
+  ];
+  const weekBars = [48, 68, 56, 82, 75, 92, 45];
+
+  const changeCalendarMonth = (step) => {
+    const next = new Date(calendarDate.getFullYear(), calendarDate.getMonth() + step, 1);
+    const yyyy = next.getFullYear();
+    const mm = String(next.getMonth() + 1).padStart(2, '0');
+    setSelectedDate(`${yyyy}-${mm}-01`);
+  };
+
   return (
     <div className="myday-page">
       {/* Top Header */}
@@ -192,78 +225,125 @@ export default function MyDay({ onToast, userName = '', setUserName }) {
         onOpenAIModal={() => setIsAIModalOpen(true)}
       />
 
-      {/* Daily Progress Dashboard Card */}
-      <ProgressCard
-        completedCount={daySummary.completed_tasks}
-        totalCount={daySummary.total_tasks}
-        completionRate={daySummary.completion_rate}
-        totalDurationMinutes={daySummary.total_duration_minutes}
-      />
-
-      {/* Main Task List Header & View Switcher */}
-      <div className="schedule-header">
-        <div className="schedule-titles">
-          <h2 className="schedule-title">Today's Schedule</h2>
-          <span className="schedule-count">
-            {daySummary.total_tasks} {daySummary.total_tasks === 1 ? 'activity' : 'activities'}
-          </span>
-        </div>
-
-        <div className="view-switch-group">
-          <button
-            className={`view-btn ${viewMode === 'timeline' ? 'active' : ''}`}
-            onClick={() => setViewMode('timeline')}
-            title="Timeline chronological view"
-          >
-            <Clock size={16} />
-            <span>Timeline</span>
-          </button>
-          <button
-            className={`view-btn ${viewMode === 'list' ? 'active' : ''}`}
-            onClick={() => setViewMode('list')}
-            title="Standard list view"
-          >
-            <List size={16} />
-            <span>List</span>
+      <section className="study-hero">
+        <div className="study-hero-copy">
+          <p className="hero-kicker">SEM {5} <span>•</span> 6 Subjects <span>•</span> 12 Weeks</p>
+          <h2>Your Study Plan</h2>
+          <div className="hero-progress-row">
+            <div className="hero-progress-track">
+              <div style={{ width: `${Math.round(daySummary.completion_rate)}%` }} />
+            </div>
+            <strong>{Math.round(daySummary.completion_rate)}%</strong>
+          </div>
+          <button className="hero-button" onClick={() => setIsAIModalOpen(true)}>
+            View plan <ChevronRight size={15} />
           </button>
         </div>
+        <div className="study-illustration" aria-hidden="true">
+          <div className="desk-leaf">🌿</div>
+          <div className="desk-lamp"><span /></div>
+          <div className="desk-stack"><b>DSA</b><b>DBMS</b><b>Agile</b></div>
+          <div className="desk-notebook" />
+        </div>
+      </section>
+
+      <div className="dashboard-grid">
+        <div className="dashboard-main">
+          <div className="schedule-header">
+            <div className="schedule-titles">
+              <h2 className="schedule-title">Today's Study Schedule</h2>
+              <span className="schedule-count">
+                {daySummary.total_tasks} {daySummary.total_tasks === 1 ? 'session' : 'sessions'}
+              </span>
+            </div>
+            <div className="view-switch-group">
+              <button className={`view-btn ${viewMode === 'timeline' ? 'active' : ''}`} onClick={() => setViewMode('timeline')}>
+                <Clock size={15} /><span>Timeline</span>
+              </button>
+              <button className={`view-btn ${viewMode === 'list' ? 'active' : ''}`} onClick={() => setViewMode('list')}>
+                <List size={15} /><span>List</span>
+              </button>
+            </div>
+          </div>
+
+          {loading ? (
+            <div className="loading-state"><div className="spinner-teal" /><p>Preparing your study flow...</p></div>
+          ) : daySummary.tasks.length === 0 ? (
+            <EmptyState onAddTask={openAddTask} message="Your study day is open." subtitle="Add a session and give your focus a clear direction." />
+          ) : viewMode === 'timeline' ? (
+            <TaskTimeline tasks={daySummary.tasks} conflicts={daySummary.conflicts} onToggle={handleToggleTask} onEdit={openEditTask} onDelete={setDeletingTask} onReschedule={setReschedulingTask} />
+          ) : (
+            <div className="tasks-list-view">
+              {daySummary.tasks.map((task) => (
+                <TaskCard key={task.id} task={task} onToggle={handleToggleTask} onEdit={openEditTask} onDelete={setDeletingTask} onReschedule={setReschedulingTask} />
+              ))}
+            </div>
+          )}
+        </div>
+
+        <aside className="dashboard-rail">
+          <section className="rail-card calendar-card">
+            <div className="rail-card-header">
+              <h3>{monthLabel}</h3>
+              <div>
+                <button onClick={() => changeCalendarMonth(-1)} aria-label="Previous month"><ChevronLeft size={16} /></button>
+                <button onClick={() => changeCalendarMonth(1)} aria-label="Next month"><ChevronRight size={16} /></button>
+              </div>
+            </div>
+            <div className="calendar-weekdays">{['Sun','Mon','Tue','Wed','Thu','Fri','Sat'].map(d => <span key={d}>{d}</span>)}</div>
+            <div className="calendar-grid">
+              {calendarCells.map((day, index) => (
+                <button
+                  key={`${day}-${index}`}
+                  className={day === calendarDate.getDate() ? 'calendar-day active' : 'calendar-day'}
+                  disabled={!day}
+                  onClick={() => {
+                    if (!day) return;
+                    const mm = String(calendarDate.getMonth() + 1).padStart(2, '0');
+                    setSelectedDate(`${calendarDate.getFullYear()}-${mm}-${String(day).padStart(2, '0')}`);
+                  }}
+                >
+                  {day || ''}
+                </button>
+              ))}
+            </div>
+          </section>
+
+          <section className="rail-card progress-card-rail">
+            <div className="rail-card-header">
+              <h3>Subject Progress</h3>
+              <button className="text-link">View All <ChevronRight size={13} /></button>
+            </div>
+            <div className="subject-list">
+              {subjectProgress.map(subject => (
+                <div className="subject-row" key={subject.name}>
+                  <span>{subject.name}</span>
+                  <div className="subject-track"><div style={{ width: `${subject.value}%`, background: subject.color }} /></div>
+                  <strong>{subject.value}%</strong>
+                </div>
+              ))}
+            </div>
+          </section>
+
+          <section className="rail-card streak-card">
+            <div className="streak-icon"><Flame size={19} /></div>
+            <div><span>Study streak</span><strong>12 Days</strong></div>
+            <p>Keep it up! 🔥</p>
+          </section>
+
+          <section className="rail-card week-card">
+            <div className="rail-card-header"><h3>This Week</h3><strong>24.5 hrs</strong></div>
+            <div className="week-bars">
+              {weekBars.map((height, index) => (
+                <div className="week-bar-wrap" key={index}>
+                  <span style={{ height: `${height}%` }} />
+                  <small>{['Mon','Tue','Wed','Thu','Fri','Sat','Sun'][index]}</small>
+                </div>
+              ))}
+            </div>
+          </section>
+        </aside>
       </div>
-
-      {/* Tasks Content or Warm Empty State */}
-      {loading ? (
-        <div className="loading-state">
-          <div className="spinner-teal" />
-          <p>Gathering your calm flow...</p>
-        </div>
-      ) : daySummary.tasks.length === 0 ? (
-        <EmptyState
-          onAddTask={openAddTask}
-          message="Your day is full of possibilities."
-          subtitle="Add your first task and give your day a little direction."
-        />
-      ) : viewMode === 'timeline' ? (
-        <TaskTimeline
-          tasks={daySummary.tasks}
-          conflicts={daySummary.conflicts}
-          onToggle={handleToggleTask}
-          onEdit={openEditTask}
-          onDelete={setDeletingTask}
-          onReschedule={setReschedulingTask}
-        />
-      ) : (
-        <div className="tasks-list-view">
-          {daySummary.tasks.map((task) => (
-            <TaskCard
-              key={task.id}
-              task={task}
-              onToggle={handleToggleTask}
-              onEdit={openEditTask}
-              onDelete={setDeletingTask}
-              onReschedule={setReschedulingTask}
-            />
-          ))}
-        </div>
-      )}
 
       {/* Task Creation & Edit Modal */}
       <TaskForm

@@ -1,10 +1,10 @@
 .sidebar {
-  width: 260px;
+  width: 220px;
   background-color: #FFFFFF;
   border-right: 1px solid var(--border-subtle);
   display: flex;
   flex-direction: column;
-  padding: 28px 18px;
+  padding: 24px 14px;
   flex-shrink: 0;
   height: 100vh;
   position: sticky;
@@ -25,7 +25,7 @@
   width: 40px;
   height: 40px;
   border-radius: 12px;
-  background: linear-gradient(135deg, #0F9D8A 0%, #15bca6 100%);
+  background: linear-gradient(135deg, #7459AD 0%, #9B79D1 100%);
   display: flex;
   align-items: center;
   justify-content: center;

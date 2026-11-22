@@ -13,8 +13,8 @@ export default function Header({
   const getGreeting = () => {
     const hour = new Date().getHours();
     if (hour >= 5 && hour < 12) return { text: 'Good morning', icon: '☀️' };
-    if (hour >= 12 && hour < 17) return { text: 'Good afternoon', icon: '🌤️' };
-    if (hour >= 17 && hour < 22) return { text: 'Good evening', icon: '✨' };
+    if (hour >= 12 && hour < 17) return { text: 'Good afternoon', icon: '👋' };
+    if (hour >= 17 && hour < 22) return { text: 'Good evening', icon: '👋' };
     return { text: 'Peaceful night', icon: '🌙' };
   };
 
@@ -60,7 +60,7 @@ export default function Header({
           {greeting.text}, {userName} <span className="greeting-emoji">{greeting.icon}</span>
         </h1>
         <p className="header-subtitle">
-          {isToday() ? "Here's your space to make today count." : `Viewing schedule for ${formatDisplayDate(selectedDate)}`}
+          {isToday() ? "Let's stay consistent with your study plan!" : `Viewing schedule for ${formatDisplayDate(selectedDate)}`}
         </p>
       </div>
 

@@ -31,9 +31,9 @@ export default function AuthPage({ onAuthenticated }) {
     <main className="auth-page">
       <section className="auth-card">
         <div className="auth-brand-mark"><Sun size={26} /></div>
-        <p className="auth-eyebrow"><Sparkles size={14} /> YOUR PERSONAL SPACE</p>
+        <p className="auth-eyebrow"><Sparkles size={14} /> YOUR STUDY SPACE</p>
         <h1>{isRegistering ? 'Make DayFlow yours' : 'Welcome back'}</h1>
-        <p className="auth-intro">Sign in to keep your tasks private and in sync across your devices.</p>
+        <p className="auth-intro">Sign in to keep your study plan organized and in sync.</p>
 
         <form className="auth-form" onSubmit={handleSubmit}>
           {isRegistering && (
@@ -57,7 +57,7 @@ export default function AuthPage({ onAuthenticated }) {
           </button>
         </form>
         <p className="auth-switch">
-          {isRegistering ? 'Already have an account?' : 'New to DayFlow?'}{' '}
+          {isRegistering ? 'Already have an account?' : 'New to Scheduly?'}{' '}
           <button type="button" onClick={() => { setIsRegistering(!isRegistering); setError(''); }}>
             {isRegistering ? 'Sign in' : 'Create an account'}
           </button>
